@@ -1,3 +1,4 @@
+
 public class HearthstoneCard 
 {
 	private int cost;
