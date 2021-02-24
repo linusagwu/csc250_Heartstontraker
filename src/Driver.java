@@ -1,60 +1,47 @@
-import java.net.URL;
-import java.util.Scanner;
 
+import java.net.URL;
+import org.json.simple.JSONValue;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import java.util.Scanner;
 public class Driver 
 {
-
+	
 	public static void main(String[] args)
 	{ 
-		HearthstoneCard c1 = new HearthstoneCard("Armor Vendor", 1, 1, 3);
-		HearthstoneCard c2 = new HearthstoneCard("Wandmaker", 2, 2, 2);
-		c1.display();
-		c2.display();
-		
-		c1.setName("woot");
-		c1.display();
-		
-		String cardJson = Driver.getJSON("https://api.hearthstonejson.com/v1/25770/enUS/cards.json");
-		System.out.println(cardJson);
-		//Let's make a json parser
-		
-		//name = input("Enter your name:")
-		//Scanner input = new Scanner(System.in);
-		//System.out.print("Enter your age:");
-		//String age = input.nextLine(); //reads the next String from the keyboard in this case
-		//System.out.println(Integer.parseInt(age) + 2);
-		//int age = input.nextInt();
-		//System.out.println(age + 2);
-		
-	}
-	
-	//open a URL and read its contents as a String
-	static String getJSON(String urlString)
-	{	    
-		String line = "";
-		try
-		{
-			URL url = new URL(urlString);
-		    Scanner input = new Scanner(url.openStream());
-		    // open the url stream, wrap it an a few "readers"
-		    //BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+		URLReader hearthstoneURLReader = new URLReader("https://api.hearthstonejson.com/v1/25770/enUS/cards.json");
+		//System.out.println(hearthstoneURLReader.getTheURLContents());
+		Object obj = JSONValue.parse(hearthstoneURLReader.getTheURLContents());
+		HearthstoneCard[] theMinions = new HearthstoneCard[1924];
 
-		    //keep reading from the scanner as long as their is something to read
-		    while (input.hasNext())
+	    //System.out.println(obj instanceof JSONArray);
+	    if(obj instanceof JSONArray)
+	    {
+	    	//I am only in here if obj IS a JSONArray
+	    	JSONArray array = (JSONArray)obj;
+	    	int count = 0;
+   
+		    for(int i = 0; i < array.size(); i++)
 		    {
-		    	line += input.nextLine();
-		    }
+		    	JSONObject cardData = (JSONObject)array.get(i);
+		    	if(cardData.containsKey("cost") && cardData.containsKey("name"))
+		    	{
+		    		if(cardData.containsKey("type") && cardData.get("type").equals("MINION"))
+		    		{
+		
+		    			String name = (String)cardData.get("name");
+		    			int cost = Integer.parseInt((String)cardData.get("cost").toString());
+		    			int attack = Integer.parseInt(cardData.get("attack").toString());
+		    			int health = Integer.parseInt(cardData.get("health").toString());
+		    			theMinions[count]= new HearthstoneCard(name, cost, attack, health);
+		    			theMinions[count].display();
+			    		count++;
+		    		}
 
-		    // close our reader
-		    input.close();
-		    
-		    //reader.close();
-		}
-	    catch(Exception e)
-		{
-	    	e.printStackTrace();
-	    	line = "Can't Connect";
-		}
-		return line;
+		    	}
+
+		    }
+		    System.out.println(count);
+	    }
 	}
 }
