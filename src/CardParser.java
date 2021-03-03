@@ -52,6 +52,38 @@ public class CardParser
 		}
 	}
 	
+	public void selectionSortHighestCostToLowestCost()
+	{
+		for(int max = 0; max < this.theMinions.size(); max++)
+		{
+			int maxIndex = this.findIndexOfLargestCostFromPosition(max);
+			HearthstoneCard temp = this.theMinions.get(max);
+			this.theMinions.set(max, this.theMinions.get(maxIndex));
+			this.theMinions.set(maxIndex, temp);
+		}
+	}
+	
+	public void insertionSortLowestCostToHighestCost()
+	{
+		for(int currStart = 1; currStart < this.theMinions.size(); currStart++)
+		{
+			//try to move the value at currStart as far up the array as possible
+			//then move on to the next currStart
+			int currIndex = currStart;
+			HearthstoneCard temp;
+			while(currIndex > 0 && this.theMinions.get(currIndex).getCost() < 
+					this.theMinions.get(currIndex-1).getCost())
+			{
+				//we swap the 2 places
+				temp = this.theMinions.get(currIndex);
+				this.theMinions.set(currIndex, this.theMinions.get(currIndex-1));
+				this.theMinions.set(currIndex-1, temp);
+				currIndex--;
+				
+			}	
+		}
+	}
+	
 	public void sortLowestCostToHighestCost()
 	{
 		//this methods job is to take our ArrayList of minions and re-arrange it so that
@@ -60,33 +92,58 @@ public class CardParser
 		//Note: this.theMinions.get(3).getCost() will give you the cost of card #3
 		//Note: this.theMinions.remove(3) will remove the card that used to be at bucket 3
 		//you will need to cobble together your own algorithm for getting this arraylist sorted
-		ArrayList<HearthstoneCard> thesortedList = new ArrayList<HearthstoneCard>();
-		HearthstoneCard smallest;
+		ArrayList<HearthstoneCard> theSortedList = new ArrayList<HearthstoneCard>();
+		HearthstoneCard nextSmallest;
 		while(this.theMinions.size() > 0)
 		{
-			smallest = this.findSmallest();
-			thesortedList.add(smallest);
+			nextSmallest = this.findSmallest();
+			theSortedList.add(nextSmallest);
 		}
-		this.theMinions = thesortedList;
+		
+		//this is making the var theMinions point to the same place
+		//as theSortedList in memory.  We could have also kept it in
+		//its original place and copies our sorted card back over.
+		this.theMinions = theSortedList;  
+
+	}
+	
+	private int findIndexOfLargestCostFromPosition(int pos)
+	{
+		//find the largest cost card from this position forward and return it
+		HearthstoneCard currWinner = this.theMinions.get(pos);
+		int indexOfWinner = pos;
+		for(int i = pos+1; i < this.theMinions.size(); i++)
+		{
+			if(this.theMinions.get(i).getCost() > currWinner.getCost())
+			{
+				//we have a new winner
+				currWinner = this.theMinions.get(i);
+				indexOfWinner = i;
+			}
+		}
+		//we know that currWinner is the card with the highest cost starting 
+		//at index pos and we know it is found at index indexOfWinner in theMinions
+		return indexOfWinner;
 	}
 	
 	private HearthstoneCard findSmallest()
 	{
-		// go through current state of theminions
-		// and remove the smallest value
+		//is to go through the current state of theMinions and remove and return the card with
+		//the smallest value
 		HearthstoneCard currWinner = this.theMinions.get(0);
-		int indexOfWinner = 1;
+		int indexOfWinner = 0;
 		
 		for(int i = 1; i < this.theMinions.size(); i++)
 		{
 			if(this.theMinions.get(i).getCost() < currWinner.getCost())
 			{
 				currWinner = this.theMinions.get(i);
-				indexOfWinner =1;
+				indexOfWinner = i;
 			}
 		}
+		//the card with the smallest cost should be in currWinner
+		//the position of the card with the smallest cost should be in indexOfWinner
 		this.theMinions.remove(indexOfWinner);
 		return currWinner;
-		
 	}
 }
