@@ -86,12 +86,15 @@ public class CardParser
 	}
 	public class BinarySearch 
 	{
-		int BinarySearch (int a[], int l, int h, int x)
+		int bigin = 0;
+		int mid;
+		int end = this.theMinions.size()-1;
+		
+		while (bigin <= end)
 		{
-			if (h >= 1) {
-				int mid = 1 + (h -1) / 2;
-				
-			}
+			mid = (bigin + end)/2;
+			if(this.theMinions.get(mid));
+			
 		}
 	}
 	
