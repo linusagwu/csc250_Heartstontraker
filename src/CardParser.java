@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -83,6 +84,16 @@ public class CardParser
 			}	
 		}
 	}
+	public class BinarySearch 
+	{
+		int BinarySearch (int a[], int l, int h, int x)
+		{
+			if (h >= 1) {
+				int mid = 1 + (h -1) / 2;
+				
+			}
+		}
+	}
 	
 	public void sortLowestCostToHighestCost()
 	{
@@ -106,7 +117,6 @@ public class CardParser
 		this.theMinions = theSortedList;  
 
 	}
-	
 	private int findIndexOfLargestCostFromPosition(int pos)
 	{
 		//find the largest cost card from this position forward and return it
@@ -125,6 +135,7 @@ public class CardParser
 		//at index pos and we know it is found at index indexOfWinner in theMinions
 		return indexOfWinner;
 	}
+	
 	
 	private HearthstoneCard findSmallest()
 	{
